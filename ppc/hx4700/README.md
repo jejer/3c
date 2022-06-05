@@ -1,8 +1,8 @@
 # SD flash
 Facts:  
 official rom format: nbf  
-flash tool rom format: nb0 
-raw rom format: part of nbf/nb0 
+flash tool rom format: nb0  
+raw rom format: part of nbf/nb0  
   
 sd flash image = fixed header + raw rom + end
 ```
