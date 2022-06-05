@@ -1,8 +1,8 @@
 #!/bin/bash
 # wget -c ftp://ftp.compaq.com/pub/softpaq/sp29501-30000/SP29841.exe
 # cabextract SP29841.exe -F *.nbf
-echo "nbf=$1"
-dd if=$1 of=raw_rom bs=264744 skip=1 > /dev/null
+echo "nb0=$1"
+dd if=$1 of=raw_rom bs=262144 skip=1 > /dev/null
 ROM=sd.img
 # ---- WARNING ----
 # !!! Be careful when copy-pasting this !!!
