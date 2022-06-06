@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0050)http://gx.fansy.net/software/cjkos4.61_keygen.html -->
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<SCRIPT language=javascript> 
+var sync,hash,eemo,mask,rcode; 
+sync=new Array(); 
+hash=new Array(); 
+rcode=new Array(); 
+function getcode(){ 
+f2.regcode.value=''; 
+for(i=0;i<16;i++)hash[i]=0; 
+hash[0]=0x64; 
+hash[1]=0x43; 
+hash[2]=0x4A; 
+hash[3]=0x4B; 
+for(i=0;i<12;i++)rcode[i]=0; 
+s=f2.syncname.value; 
+c0=s.length; 
+for(i=0;i<c0;i++) 
+sync[i]=s.charCodeAt(i); 
+c1=((c0+15)>>4)<<4; 
+for(i=0;i<c1;i++) 
+hash[i%16]=(hash[i%16]+sync[i%c0]+i-c0)&0xff; 
+for(i=0;i<6;i++){ 
+m=0; 
+for(j=0;(j<12)&&(j<(16-i));j++) 
+m+=((hash[i+j]-32)<<(j%4))&0xFFFF; 
+m=m+hash[15-i]-48; 
+m=m&0xFF; 
+rcode[2*i]=m>>4; 
+rcode[2*i+1]=m&0x0F; 
+} 
+for(i=0;i<12;i++){ 
+r=rcode[i]&0x3f; 
+rcode[i]=(r<10?r+48:(r<20?r+87:(r<35?r+88:r+48))) 
+} 
+for(i=0;i<12;i++) 
+f2.regcode.value+=String.fromCharCode(rcode[i]); 
+} 
+</SCRIPT>
+
+<META content="MSHTML 6.00.2800.1400" name=GENERATOR></HEAD>
+<BODY>
+<FORM name=f2 onsubmit="return false;">User Name: <INPUT size=12 name=syncname> <INPUT onclick="getcode();return false;" type=submit value=Get> <BR>Reg. Code: 
+<INPUT size=17 name=regcode> </FORM></BODY></HTML>
