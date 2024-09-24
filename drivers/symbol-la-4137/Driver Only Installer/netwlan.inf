@@ -1,0 +1,376 @@
+; NetWlan5.inf
+; Symbol Based Wireless LAN Adapter Install Script for Windows 98/ME, 2000 and XP
+; Copyright (c) 2001, Microsoft
+; Copyright (c) 2001, Symbol Technologies, Inc.
+;
+;============================================================================
+; Current Version %VER 3.9.2.B62 build
+;============================================================================
+
+[version]
+Signature  = $Windows NT$
+Class      = net
+ClassGUID  = {4d36e972-e325-11ce-bfc1-08002be10318}
+Provider   = %Symbol%
+DriverVer = 03/25/2004,3.9.71.178
+CatalogFile = NetWlan5.cat
+
+[Manufacturer]
+%Symbol_Provider%	= SYMBOL, NTx86
+ 
+[ControlFlags]
+ExcludeFromSelect = PCMCIA\Symbol_Technologies-LA4111_Spectrum24_Wireless_LAN_PC_Card-077d, \
+					PCMCIA\Symbol-Spectrum24_LA4100_Series_WLAN_PC_Card-e063, \
+					PCI\VEN_1562&DEV_0001
+
+[SYMBOL]
+%SLA4111.DeviceDesc%    = SLA4111.ndi,		PCMCIA\Symbol_Technologies-LA4111_Spectrum24_Wireless_LAN_PC_Card-077d
+%SLA4100.DeviceDesc%	= SLA4100.ndi,		PCMCIA\Symbol-Spectrum24_LA4100_Series_WLAN_PC_Card-e063
+%SLA4113.DeviceDesc%    = SLA4113.ndi,		PCI\VEN_1562&DEV_0001
+
+[SYMBOL.NTx86]
+%SLA4111.DeviceDesc%    = XP_SLA4111.ndi,	PCMCIA\Symbol_Technologies-LA4111_Spectrum24_Wireless_LAN_PC_Card-077d
+%SLA4100.DeviceDesc%	= XP_SLA4100.ndi,	PCMCIA\Symbol-Spectrum24_LA4100_Series_WLAN_PC_Card-e063
+%SLA4113.DeviceDesc%    = XP_SLA4113.ndi,	PCI\VEN_1562&DEV_0001
+
+
+;--------------------------------------------------------------------------------
+; Symbol PCMCIA Card (WinXP)
+;
+;(T2)
+[XP_SLA4111.ndi.NT]
+Characteristics = 0x84	; NCF_HAS_UI, NCF_PHYSICAL
+BusType         = 8	; Pcmcia bus
+CopyFiles		= CopyFiles.driverXP
+AddReg          = AddReg.XP.interfaces, AddReg.XP.Params, SLA4111.AddReg
+
+;(T3)
+[XP_SLA4100.ndi.NT]
+Characteristics = 0x84	; NCF_HAS_UI, NCF_PHYSICAL
+BusType         = 8		; Pcmcia bus
+CopyFiles		= CopyFiles.driverXP
+AddReg          = AddReg.XP.interfaces, AddReg.XP.Params, SLA4100.AddReg
+
+[XP_SLA4111.ndi.NT.Services]
+AddService = NetWlanXP, 2, NetWlanXP.Service, NetWlanXP.EventLog
+
+
+[XP_SLA4100.ndi.NT.Services]
+AddService = NetWlanXP, 2, NetWlanXP.Service, NetWlanXP.EventLog
+
+
+;--------------------------------------------------------------------------------
+; Symbol PCMCIA Card (Win2K)
+;
+;(T2)
+[SLA4111.ndi.NT]
+Characteristics = 0x84	; NCF_HAS_UI, NCF_PHYSICAL
+BusType         = 8	; Pcmcia bus
+CopyFiles		= CopyFiles.driver
+AddReg          = AddReg.interfaces, AddReg.Params, SLA4111.AddReg
+
+;(T3)
+[SLA4100.ndi.NT]
+Characteristics = 0x84	; NCF_HAS_UI, NCF_PHYSICAL
+BusType         = 8	; Pcmcia bus
+CopyFiles		= CopyFiles.driver
+AddReg          = AddReg.interfaces, AddReg.Params, SLA4100.AddReg
+
+[SLA4111.AddReg]
+HKR,	,CLSGUID,          0,%SYMBOL_DS11_GUID%
+HKR,	,AdapterModel,     0,%SLA4111_AdapterModel%
+HKR,	,Provider,	       0,%Symbol_Provider%
+HKR,	,ESQUARE, 0x00010001,0x00000000
+HKR,	,RogueAPDetection, 0x00010001,0x00000000
+HKR,	,MCVer,	       0,%MCVER%
+
+[SLA4100.AddReg]
+HKR,	,CLSGUID,	       0,%SYMBOL_DS11_T3_GUID%
+HKR,	,AdapterModel,     0,%SLA4100_AdapterModel%
+HKR,	,Provider,	       0,%Symbol_Provider%
+HKR,	,ESQUARE, 0x00010001,0x00000001
+HKR,	,RogueAPDetection, 0x00010001,0x00000000
+HKR,	,MCVer,	       0,%MCVER%
+
+[SLA4111.ndi.NT.Services]
+AddService = NetWlan5, 2, NetWlan5.Service, NetWlan5.EventLog
+
+
+[SLA4100.ndi.NT.Services]
+AddService = NetWlan5, 2, NetWlan5.Service, NetWlan5.EventLog
+
+
+;-----------------------------------------------------------------------------
+; Symbol PCMCIA Card (Win9x)
+;-----------------------------------------------------------------------------
+[SLA4111.ndi]
+CopyFiles	= CopyFiles.System
+AddReg		= ndi.reg, SLA41111.reg
+
+[SLA4100.ndi]
+CopyFiles	= CopyFiles.System
+AddReg		= ndi.reg, SLA41100.reg
+
+;-----------------------------------------------------------------------------
+;(Windows98/ME)
+[SLA41111.reg]
+HKR,	,DriverDesc,	, %SLA4111_DriverDesc%
+HKR,	,CLSGUID,		, %SYMBOL_DS11_GUID%
+HKR,Ndi	,DeviceID,		, "PCMCIA\Symbol_Technologies-LA4111_Spectrum24_Wireless_LAN_PC_Card-077d"
+HKR,	,AdapterModel, 0, %SLA4111_AdapterModel%
+HKR,	,Provider,	   0, %Symbol_Provider%	
+HKR,	,ESQUARE,	   0, "0"
+
+[SLA41100.reg]
+HKR,	,DriverDesc,	, %SLA4100_DriverDesc%
+HKR,	,CLSGUID,		, %SYMBOL_DS11_T3_GUID%
+HKR,Ndi	,DeviceID,		, "PCMCIA\Symbol-Spectrum24_LA4100_Series_WLAN_PC_Card-e063"
+HKR,	,AdapterModel, 0, %SLA4100_AdapterModel%
+HKR,	,Provider,	   0, %Symbol_Provider%	
+HKR,	,ESQUARE,	   0, "1"
+
+
+;--------------------------------------------------------------------------------
+; Symbol PCI Card (Windows XP)
+;
+[XP_SLA4113.ndi.NT]
+Characteristics = 0x84	; NCF_HAS_UI, NCF_PHYSICAL
+BusType         = 5	; PCI bus
+CopyFiles		= CopyFiles.driverXP
+AddReg          = AddReg.XP.interfaces, AddReg.XP.Params, SLA4113.AddReg
+
+[XP_SLA4113.ndi.NT.Services]
+AddService = NetWlanXP, 2, NetWlanXP.Service, NetWlanXP.EventLog
+
+
+;--------------------------------------------------------------------------------
+; Symbol PCI Card (Windows 2k)
+;
+[SLA4113.ndi.NT]
+Characteristics = 0x84	; NCF_HAS_UI, NCF_PHYSICAL
+BusType         = 5	; PCI bus
+CopyFiles		= CopyFiles.driver
+AddReg          = AddReg.interfaces, AddReg.Params, SLA4113.AddReg
+
+[SLA4113.AddReg]
+HKR,	,CLSGUID,			 0, %SYMBOL_DS11_GUID%
+HKR,	,CardType,	0x00010001, 0x00000003
+HKR,	,BusType,	0x00010001, 0x00000005
+HKR,	,AdapterModel,		 0, %SLA4113_AdapterModel%
+HKR,	,Provider,			 0, %Symbol_Provider%	
+HKR,	,RogueAPDetection, 0x00010001,0x00000000
+HKR,	,MCVer,	       0,%MCVER%
+
+[SLA4113.ndi.NT.Services]
+AddService = NetWlan5, 2, NetWlan5.Service, NetWlan5.EventLog
+
+
+;-----------------------------------------------------------------------------
+; Symbol PCI Card (Windows98/ME)
+;-----------------------------------------------------------------------------
+[SLA4113.ndi]
+CopyFiles	= CopyFiles.System
+AddReg		= ndi.reg, SLA41111.reg
+
+;-----------------------------------------------------------------------------
+;(Windows98/ME)
+[SLA41113.reg]
+HKR,	,DriverDesc,	0, %SLA4113_DriverDesc%
+HKR,	,CLSGUID,		0, %SYMBOL_DS11_GUID%
+HKR,Ndi	,DeviceID,		0, "PCI\VEN_1562&DEV_0001"
+HKR,	,AdapterModel,  0, %SLA4113_AdapterModel%
+HKR,	,Provider,	    0, %Symbol_Provider%	
+HKR,	,ESQUARE,		0, "0"
+
+
+;-------------------------------------------------------------------------------
+; DS Params
+;
+[AddReg.Params]
+HKR,	, PCCardPacketFilter,0x00010001, "0x0000000B"
+HKR, 	, NetType,                    0, "WLAN"
+HKR, Ndi, Service,                    0, "NetWlan5"
+HKR,	, SerialKey,	              0, %SERIALKEY%
+HKR,    , Password,                   0, "3745A4CA1FD2D1CFC10041C7576C0E6423A815E6D4D094C8D87441C26A6C0211153DDE9C851085"
+
+[AddReg.XP.Params]
+HKR,	, PCCardPacketFilter,0x00010001, "0x0000000B"
+HKR, 	, NetType,                    0, "WLAN"
+HKR, Ndi, Service,                    0, "NetWlanXP"
+HKR,	, SerialKey,	              0, %SERIALKEY%
+HKR,    , Password,                   0, "3745A4CA1FD2D1CFC10041C7576C0E6423A815E6D4D094C8D87441C26A6C0211153DDE9C851085"
+
+;-------------------------------------------------------------------------------
+; Wrapper 
+;
+[AddReg.interfaces]
+HKR, Ndi,Service,				0, "NetWlan5"
+HKR, Ndi\Interfaces, UpperRange,0, "ndis5"
+HKR, Ndi\Interfaces, LowerRange,0, "ethernet"
+
+[AddReg.XP.interfaces]
+HKR, Ndi,Service,				0, "NetWlanXP"
+HKR, Ndi\Interfaces, UpperRange,0, "ndis5"
+HKR, Ndi\Interfaces, LowerRange,0, "ethernet"
+
+;-------------------------------------------------------------------------------
+; Service and Driver
+;
+[NetWlan5.Service]
+DisplayName    = %NetWlan5.ServiceDesc%
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 1
+ServiceBinary  = %12%\NetWlan5.sys
+LoadOrderGroup = NDIS
+
+[NetWlan5.Eventlog]
+Addreg = NetWlan5.Eventlog.reg
+
+[NetWlan5.Eventlog.reg]
+HKR, , EventMessageFile, 0x00020000, "%%SystemRoot%%\System32\netevent.dll;%%SystemRoot%%\System32\Drivers\NetWlan5.sys"
+HKR, , TypesSupported,   0x00010001, 7
+
+[NetWlanXP.Service]
+DisplayName    = %NetWlanXP.ServiceDesc%
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 1
+ServiceBinary  = %12%\NetWlanXP.sys
+LoadOrderGroup = NDIS
+
+[NetWlanXP.Eventlog]
+Addreg = NetWlanXP.Eventlog.reg
+
+[NetWlanXP.Eventlog.reg]
+HKR, , EventMessageFile, 0x00020000, "%%SystemRoot%%\System32\netevent.dll;%%SystemRoot%%\System32\Drivers\NetWlanXP.sys"
+HKR, , TypesSupported,   0x00010001, 7
+
+[CopyFiles.driver]
+NetWlan5.sys,,,2
+NetWlan.T2,,,2
+NetWlan.T2i,,,2
+
+[CopyFiles.driverXP]
+NetWlanXP.sys,,,2
+NetWlan.T2,,,2
+NetWlan.T2i,,,2
+
+
+;-----------------------------------------------------------------------------
+; End Windows Win2k/XP
+;-----------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
+; Files copied to the Windows\System directory (Windows98/ME)
+;-----------------------------------------------------------------------------
+[CopyFiles.System]
+NetWLan5.sys
+NetWlan.T2
+NetWlan.T2i
+NetNDI.dll
+Un9xMC39.exe
+
+
+;-----------------------------------------------------------------------------
+;(Windows98/ME)
+[ndi.reg]
+; Custom Ndi Install DLL
+HKR,Ndi,NdiInstaller,,"NetNDI.dll,Spectrum24LA411xNdiProc"
+
+HKR,,DevLoader,,*ndis
+HKR,,DeviceVxDs,,NetWLan5.sys
+;
+; NDIS Info (Windows98/ME)
+;
+HKR,NDIS,LogDriverName,	   0,"NetWLan5"
+HKR,NDIS,MajorNdisVersion, 1,03
+HKR,NDIS,MinorNdisVersion, 1,0A
+;
+; Interfaces (Windows98/ME)
+;
+HKR,NDI\Interfaces,DefUpper,	,"ndis3"
+HKR,NDI\Interfaces,DefLower,	,"ethernet"
+HKR,NDI\Interfaces,UpperRange,	,"ndis3"
+HKR,NDI\Interfaces,LowerRange,	,"ethernet"
+;
+; Install sections (Windows98/ME)
+;
+
+
+;-----------------------------------------------------------------------------
+;(Windows98/ME)
+[Common.PCMCIA.reg]
+HKR,	,SerialKey, 0, %SERIALKEY%
+HKR,    ,Password,  0, "3745A4CA1FD2D1CFC10041C7576C0E6423A815E6D4D094C8D87441C26A6C0211153DDE9C851085"
+
+;-----------------------------------------------------------------------------
+;(Windows98/ME)
+[Common.PCI.reg]
+HKR,	,CardType,	0, "3"
+HKR,	,SerialKey,	0, %SERIALKEY%
+HKR,   , Password,  0, "3745A4CA1FD2D1CFC10041C7576C0E6423A815E6D4D094C8D87441C26A6C0211153DDE9C851085"
+
+;-----------------------------------------------------------------------------
+; End Windows 98/ME
+;-----------------------------------------------------------------------------
+
+
+
+;-----------------------------------------------------------------------------
+[DestinationDirs]
+DefaultDestDir          = 11 		; Windows\System
+CopyFiles.System   	= 11 		; Windows\System
+CopyFiles.driver	= 12		; LDID for System[32]\Drivers directory
+CopyFiles.driverXP	= 12		; LDID for System[32]\Drivers directory
+
+
+;-----------------------------------------------------------------------------
+[SourceDisksNames]
+1=%SOURCEDISK1%,,
+
+;-----------------------------------------------------------------------------
+; disk files
+[SourceDisksFiles]
+NetWLan5.sys			= 1,	,NetWLan5.sys,		78000
+NetWLanXP.sys			= 1,	,NetWLanXP.sys,		78000
+NetWlan.T2 			= 1,	,NetWLan.T2,		78000
+NetWlan.T2i 			= 1,	,NetWLan.T2i,		78000
+NetNDI.dll 			= 1,	,NetNDI.dll,		18000
+Un9xMC39.exe			= 1,	,Un9xMC39.exe,		20000
+
+
+;-------------------------------------------------------------------------------
+; Localizable Strings
+;
+[Strings]
+Symbol 				= "Symbol Technologies"
+SYMBOL_DS11_GUID		= "{0501BD06-A25B-11d3-AD24-00A0F8FFFF62}"
+SYMBOL_DS11_T3_GUID		= "{62C2CE08-E442-4839-97BA-77455AC358A8}"
+
+
+SERIALKEY				= "1D43A0FCC39881E57B8030D6A6B33FE51A301717BB0BEF105B43F09C9769487C09995821D3FE16C428124E"
+
+; Supported Devices
+SLA4100.DeviceDesc		= "Symbol Spectrum24 LA-4100 Series Wireless LAN PC Card"
+SLA4111.DeviceDesc		= "Symbol LA-41x1 Spectrum24 Wireless LAN PC Card"
+SLA4113.DeviceDesc		= "Symbol LA-41x3 Spectrum24 Wireless LAN PCI Card"
+
+; Driver Description
+SLA4100_DriverDesc		= "Symbol Spectrum24 LA-4100 Series Wireless LAN PCMCIA Card Driver"
+SLA4111_DriverDesc		= "Symbol LA-41x1 Spectrum24 Wireless LAN PCMCIA Card Driver"
+SLA4113_DriverDesc		= "Symbol LA-41x3 Spectrum24 Wireless LAN PCI Card Driver"
+
+; Adapter Model
+SLA4100_AdapterModel	= "Spectrum24 LA4100 Series WLAN PC Card"
+SLA4111_AdapterModel	= "LA4111 Spectrum24 Wireless LAN PC Card"
+SLA4113_AdapterModel	= "LA4113 Spectrum24 Wireless LAN PCI Card"
+
+Symbol_Provider			= "Symbol"
+
+NetWlan5.ServiceDesc	= "Symbol Wireless LAN Adapter Driver"
+NetWlanXP.ServiceDesc	= "Symbol Wireless LAN Adapter Driver"
+SOURCEDISK1		= "Symbol Mobile Companion[TM] Installation Disk"
+
+; MC Version
+MCVER	= "T3.9.2.B62"
+

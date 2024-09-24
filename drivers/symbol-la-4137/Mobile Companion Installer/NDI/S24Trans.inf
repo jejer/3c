@@ -1,0 +1,73 @@
+;-------------------------------------------------------------------------
+; S24TRANS.INF -- S24TRANS Protocol
+;
+;-------------------------------------------------------------------------
+
+[version]
+Signature   = "$Windows NT$"
+Class       = NetTrans
+ClassGUID   = {4d36e975-e325-11ce-bfc1-08002be10318}
+Provider    = %Smbl%
+LayoutFile  = layout.inf
+
+[Manufacturer]
+%Smbl%=SMBL
+
+[SMBL]
+%S24TRANS_Desc%=Install, SYMBL_S24TRANS
+
+;-------------------------------------------------------------------------
+; Installation Section
+;-------------------------------------------------------------------------
+[Install]
+AddReg=Inst_Ndi
+Characteristics=0x00
+;CopyFiles=CpyFiles_Sys
+
+;-------------------------------------------------------------------------
+; Ndi installation support
+;-------------------------------------------------------------------------
+[Inst_Ndi]
+;HKR,"Ndi","ClsID",,"{a28d553a-a703-11d0-9cec-00c04fc9bcc4}"
+HKR,"Ndi","Service",,"s24trans"
+HKR,"Ndi","HelpText",,"%S24TRANS_HelpText%"
+HKR,"Ndi\Interfaces","UpperRange",,"noupper"
+HKR,"Ndi\Interfaces","LowerRange",,"ndis5,ndis4"
+
+;-------------------------------------------------------------------------
+; Service installation support
+;-------------------------------------------------------------------------
+[Install.Services]
+AddService=s24trans,,S24TRANS_Service_Inst
+
+[S24TRANS_Service_Inst]
+DisplayName     = %S24TRANS_Desc%
+ServiceType     = 1 ;SERVICE_KERNEL_DRIVER
+StartType       = 2 ;SERVICE_AUTO_START
+ErrorControl    = 1 ;SERVICE_ERROR_NORMAL
+ServiceBinary   = %12%\s24trans.sys
+LoadOrderGroup  = "PNP_TDI"
+AddReg          = AddReg_S24TRANS_Service_Inst
+Description     = %S24TRANS_Desc%
+
+[AddReg_S24TRANS_Service_Inst]
+
+;-------------------------------------------------------------------------
+; Support for removal of static registry settings
+;-------------------------------------------------------------------------
+[Install.Remove]
+DelReg=Del_Static_Reg
+
+[Install.Remove.Services]
+DelService=s24trans
+
+[Del_Static_Reg]
+
+[Strings]
+Smbl = "Symbol"
+S24TRANS_Desc = "WLAN Transport"
+S24TRANS_HelpText = "A transport for supporting WNMP and Mobile IP."
+
+REG_DWORD = 0x10001
+REG_MULTI_SZ = 0x10000
+

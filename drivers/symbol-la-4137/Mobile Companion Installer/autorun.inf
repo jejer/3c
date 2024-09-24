@@ -1,0 +1,6 @@
+[autorun]
+ICON=AUTORUN.EXE
+OPEN=AUTORUN.EXE
+
+[DeviceInstall]
+DriverPath=%windowsroot%\inf\netwlan.inf

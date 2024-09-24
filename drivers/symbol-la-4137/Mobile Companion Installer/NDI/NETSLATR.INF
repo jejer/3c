@@ -1,0 +1,131 @@
+;
+; Symbol Spectrum24 WLAN Adapter Transport installation script for Windows 95/98
+;
+; Copyright (c) 1997, Symbol Technologies, Inc.
+;
+; Version       Date            Who             Description
+; =======       ====            ===             ===========
+; 1.00-00       02/01/97        kso             Initial version.
+; 1.00-01       02/20/97        kso             Don't make the VxD Static and
+;                                               don't do remove.
+; 1.00-02	12/09/98	bsl		Add NicTT support.
+; 1.00-03	12/18/00	bsl		Add WindowsMe support.
+
+;
+; Notes
+; =====
+; 1) This file MUST be copied to the Windows 95 .INF file sub-directory BEFORE
+; the installer is started.  The installer won't bind the transport to all
+; adapters if this is not done.
+;
+
+[version]
+LayoutFile=layout.inf
+signature="$CHICAGO$"
+Class=NetTrans
+provider=%SYMBOL%
+
+[CLassInstall]
+Characteristics=0x08			; NCF_HIDDEN
+Addreg=NetTrans.AddReg
+
+[NetTrans.AddReg]
+HKR,,,,%CLASSNAME%
+HKR,,Installer,,netdi.dll
+HKR,,Icon,,-6
+HKR,,NoUseClass,,1
+HKR,,NoInstallClass,,1	;Class is not shown in New Device Wizard
+HKR,,NoDisplayClass,,1	;Class will not be displayed by Device Manager
+HKR,,SilentInstall,,1	;Class is installed without any user interaction
+
+[Manufacturer]
+%SYMBOL%=SYMBOL
+
+[SYMBOL]
+%S24TRANS.DeviceDesc%=   S24TRANS.ndi, S24TRANS
+
+;****************************************************************************
+; S24TRANS
+;****************************************************************************
+[S24TRANS.ndi]
+AddReg=S24TRANS.ndi.reg
+
+;Unique PnP ID, entry need to be present so that setup can back track
+;the device name from the driver
+DeviceID=S24TRANS
+
+;Specify if the device can be installed more than once
+;if not specify, default is MaxInstance=1
+MaxInstance=8
+
+[S24TRANS.ndi.reg]
+HKR,Ndi,DeviceID,,S24TRANS
+HKR,Ndi,MaxInstance,,8
+
+; NDIS Info
+HKR,NDIS,LogDriverName,,S24TRANS
+HKR,NDIS,MajorNdisVersion,1,03
+HKR,NDIS,MinorNdisVersion,1,0A
+
+; Interfaces
+HKR,Ndi\Interfaces,DefUpper,,"nothing"
+HKR,Ndi\Interfaces,DefLower,,"ndis3,ndis4,ndis5"
+
+HKR,Ndi\Interfaces,UpperRange,,"nothing"
+HKR,Ndi\Interfaces,LowerRange,,"ndis3,ndis4,ndis5"
+
+; Install sections
+HKR,Ndi\Install,,,"S24TRANS.Install"
+HKR,Ndi\Remove,,,"S24TRANS.Remove"
+
+; Context help
+HKR,Ndi,HelpText,,%S24TRANS_HELP%
+
+[S24TRANS.Install]
+AddReg=S24TRANS.AddReg
+
+[S24TRANS.AddReg]
+HKLM,"SOFTWARE\Symbol Technologies, Inc.\WLAN Transport\%TRANS_VERSION%\%TRANS_ENG_RELEASE%"
+; Service Info.
+HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\RunServices",S24EvMon,,"S24EvMon.exe"
+; NicTT info
+;HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Run",NICTTEXE,,"NicTT.exe"
+HKR,,DevLoader,,*ndis
+HKR,,DeviceVxDs,,S24TRANS.VXD
+
+[S24TRANS.Remove]
+DelReg=S24TRANS.DelReg
+
+[S24TRANS.DelReg]
+HKR,,DevLoader,,*ndis
+HKR,,DeviceVxDs,,S24TRANS.VXD
+HKLM,"SOFTWARE\Symbol Technologies, Inc.\WLAN Transport\%TRANS_VERSION%\%TRANS_ENG_RELEASE%",,
+HKLM,"SOFTWARE\Symbol Technologies, Inc.\WLAN Transport\%TRANS_VERSION%",,
+HKLM,"SOFTWARE\Symbol Technologies, Inc.\WLAN Transport",,
+HKLM,"System\CurrentControlSet\Services\VxD\S24TRANS",,
+;HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\RunServices",,
+HKLM,"SOFTWARE\Microsoft\Windows\CurrentVersion\Run\NICTTEXE",,
+
+;****************************************************************************
+; Strings
+;****************************************************************************
+
+[strings]
+
+; Class name
+CLASSNAME="Network Protocol"
+
+; Manufacturer
+SYMBOL="Symbol Technologies, Inc."
+
+; Devices
+S24TRANS.DeviceDesc="WLAN Transport"
+
+; Parameters
+
+; Context help
+S24TRANS_HELP="Provides Wireless LAN Transport and Driver Extension API services."
+
+; Version strings
+TRANS_VERSION = "4.10"
+TRANS_ENG_RELEASE = "02"
